@@ -17,13 +17,13 @@ namespace TaskManagerClient
         public static string URL = ConfigurationManager.AppSettings["URL"].ToString();
         //log4net.Config.BasicConfigurator.Configure();
         log4net.ILog log = log4net.LogManager.GetLogger(typeof(TaskClient));
-        public string Create(string s)
+        public string Create(Task task)
         {
             try
             {
                 log.Debug("Create task details");
                 HttpClient client = new HttpClient();
-                var content = new StringContent(JsonConvert.SerializeObject(new { text = s }), Encoding.UTF8, "application/json");
+                var content = new StringContent(JsonConvert.SerializeObject(task), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync(URL + "Create", content).Result;// new Uri(URL + "UpdateFile", content);
                 string resp = response.StatusCode.ToString();
                 return resp;
@@ -34,13 +34,13 @@ namespace TaskManagerClient
                 return " ";
             }
         }
-        public void Edit(int id, string name, string description, DateTime createdTime, DateTime endTime, string status)
+        public void Edit(Task task)
         {
             try
             {
                 log.Debug("Edit task details in TasClient");
                 HttpClient client = new HttpClient();
-                var content = new StringContent(JsonConvert.SerializeObject(new { textId = id, textName = name, textDescription = description, textCreatedTime = createdTime, textEndTime = endTime, textStatus = status }), Encoding.UTF8, "application/json");
+                var content = new StringContent(JsonConvert.SerializeObject(task), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync(URL + "Edit", content).Result;// new Uri(URL + "UpdateFile", content);
                 string resp = Convert.ToString(response);
                 //return resp;
@@ -50,20 +50,41 @@ namespace TaskManagerClient
                 log.Error("Error in Edit task details TaskClient" + ex);
             }
         }
-        public void Display()
+        public List<Task> GetAll()
         {
             try
             {
                 log.Debug("Display task details of TaskClient ");
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(URL + "Display");
+                client.BaseAddress = new Uri(URL + "GetAll");
                 client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage response = client.GetAsync(urlParameters).Result;
+                return JsonConvert.DeserializeObject<List<Task>>(response.Content.ToString());
             }
             catch (Exception ex)
             {
                 log.Error("Error in display task details in TaskClient" + ex);
+                return null;
+            }
+        }
+
+        public Task Get()
+        {
+            try
+            {
+                log.Debug("Display task details of TaskClient ");
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(URL + "Get");
+                client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync(urlParameters).Result;
+                return JsonConvert.DeserializeObject<Task>(response.Content.ToString());
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error in display task details in TaskClient" + ex);
+                return null;
             }
         }
         public int Delete(int id)

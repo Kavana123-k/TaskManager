@@ -13,12 +13,12 @@ namespace TaskMangerServer
     {
         readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(TaskManager));
         private readonly List<Task> taskList = new List<Task>();
-        public void Create(String s)
+        public void Create(Task task)
         {
             try
             {
                 log.Debug("Creating a Task Details");
-                taskList.Add(new Task { name = s });
+                taskList.Add(task);
                 Console.WriteLine("Created");
             }
             catch (Exception ex)
@@ -26,46 +26,60 @@ namespace TaskMangerServer
                 log.Error("Error in Create() of TaskManager" + ex);
             }
         }
-        //public Task Edit(Task task)
-        //{
-        //    try
-        //    {
-        //        log.Debug("Edit the task details");
-        //        var itemToEdit = taskList.Find(t => t.id == task.id);
-        //        if (itemToEdit != null)
-        //        {
-        //            itemToEdit = task;
-        //        }
-        //        return itemToEdit;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Error in Edit() of TaskManager" + ex);
-        //        return null;
-        //    }
-        //}
-        //public int Delete(int id)
-        //{
-        //    try
-        //    {
-        //        log.Debug("Delete the task dtails");
-        //        var itemToRemove = taskList.SingleOrDefault(r => r.id == id);
-        //        if (itemToRemove != null)
-        //            taskList.Remove(itemToRemove);
-        //        return id;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        log.Error("Error  in Delete() of TaskManager" + ex);
-        //        return ' ';
-        //    }
-        //}
-        public List<Task> Display()
+        public Task Edit(Task task)
+        {
+            try
+            {
+                log.Debug("Edit the task details");
+                var itemToEdit = Get(task.id);
+                if (itemToEdit != null)
+                {
+                    itemToEdit = task;
+                }
+                return itemToEdit;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error in Edit() of TaskManager" + ex);
+                return null;
+            }
+        }
+        public int Delete(int id)
+        {
+            try
+            {
+                log.Debug("Delete the task dtails");
+                var itemToRemove = taskList.SingleOrDefault(r => r.id == id);
+                if (itemToRemove != null)
+                    taskList.Remove(itemToRemove);
+                return id;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error  in Delete() of TaskManager" + ex);
+                return ' ';
+            }
+        }
+        public List<Task> GetAll()
         {
             try
             {
                 log.Debug("To Diplay the task details");
-                return taskList.ToList();
+                return taskList;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error in Display() of TaskManager" + ex);
+                return null;
+            }
+        }
+
+        public Task Get(int id)
+        {
+            try
+            {
+                log.Debug("To Diplay the task details");
+                return taskList.Find(t => t.id == id);
             }
             catch (Exception ex)
             {

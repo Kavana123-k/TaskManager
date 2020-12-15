@@ -10,19 +10,19 @@ using System.Globalization;
 
 namespace TaskMangerServer.Controllers
 {
-    class TaskController : ApiController
+    public class TaskController : ApiController
     {
         log4net.ILog log = log4net.LogManager.GetLogger(typeof(TaskController));
         TaskManager taskManager = new TaskManager();
         [HttpPost]
-        public void Create([FromBody] string text)
+        public void Create([FromBody] Task task)
         {
             try
             {
                 log.Debug("HttpPost to Create() task details");
                 //var cTime = DateTime.ParseExact(createdTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 //var eTime = DateTime.ParseExact(endTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
-                taskManager.Create(text);
+                taskManager.Create(task);
                 Console.WriteLine("created");
             }
             catch (Exception)
@@ -31,42 +31,42 @@ namespace TaskMangerServer.Controllers
             }
         }
         [HttpPost]
-        //public Task Edit([FromBody] Text task)
-        //{
-        //    try
-        //    {
-        //        log.Debug("HttpPost to Edit() task details");
-        //        var t = taskManager.Edit(task);
-        //        return t;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        log.Error("Exception in Edit task");
-        //        return null;
-        //    }
-        //}
-        //[HttpPost]
-        //public int Delete([FromBody] int id)
-        //{
-        //    try
-        //    {
-        //        log.Debug("HttpPost to Delete() task details");
-        //        var t = taskManager.Delete(id);
-        //        return t;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        log.Error("Exception in Delete task");
-        //        return ' ';
-        //    }
-        //}
+        public Task Edit([FromBody] Task task)
+        {
+            try
+            {
+                log.Debug("HttpPost to Edit() task details");
+                var t = taskManager.Edit(task);
+                return t;
+            }
+            catch (Exception)
+            {
+                log.Error("Exception in Edit task");
+                return null;
+            }
+        }
+        [HttpPost]
+        public int Delete([FromBody] int id)
+        {
+            try
+            {
+                log.Debug("HttpPost to Delete() task details");
+                var t = taskManager.Delete(id);
+                return t;
+            }
+            catch (Exception)
+            {
+                log.Error("Exception in Delete task");
+                return ' ';
+            }
+        }
         [HttpGet]
-        public List<Task> Display()
+        public List<Task> GetAll()
         {
             try
             {
                 log.Debug("HttpGet to Display() task details");
-                var t = taskManager.Display();
+                var t = taskManager.GetAll();
                 return t;
             }
             catch
@@ -75,9 +75,19 @@ namespace TaskMangerServer.Controllers
                 return null;
             }
         }
-        public class Text
+        [HttpGet]
+        public Task Get(int id)
         {
-            public string text { get; set; }
+            try
+            {
+                log.Debug("HttpGet to Display() task details");
+                return taskManager.Get(id);
+            }
+            catch
+            {
+                log.Error("Exception in Edit task");
+                return null;
+            }
         }
     }
 }

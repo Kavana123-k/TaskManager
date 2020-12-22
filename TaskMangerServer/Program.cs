@@ -17,6 +17,7 @@ namespace TaskMangerServer
         {
             string URL = ConfigurationManager.AppSettings["url"];
             var config = new HttpSelfHostConfiguration(URL);
+            config.EnableCors();
             config.Routes.MapHttpRoute(
                         name: "DefaultApi",
                         routeTemplate: "api/{controller}/{action}/{id}",

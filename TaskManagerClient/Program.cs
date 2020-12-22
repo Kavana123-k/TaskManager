@@ -41,7 +41,7 @@ namespace TaskManagerClient
                         Console.WriteLine(JsonConvert.SerializeObject(tasks));
                         break;
                     case 5:
-                        var task = taskclient.Get();
+                        var task = taskclient.Get(GetId());
                         Console.WriteLine(JsonConvert.SerializeObject(task));
                         break;
                     default:

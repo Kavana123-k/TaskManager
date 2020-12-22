@@ -69,7 +69,7 @@ namespace TaskManagerClient
             }
         }
 
-        public Task Get()
+        public Task Get(int id)
         {
             try
             {

@@ -7,11 +7,13 @@ using System.Web.Http;
 using System.Configuration;
 using log4net.Config;
 using System.Globalization;
+using System.Web.Http.Cors;
 
 namespace TaskMangerServer.Controllers
 {
+   [EnableCors(origins: "http://localhost", headers: "*", methods: "*")]
     public class TaskController : ApiController
-    {
+    {        
         log4net.ILog log = log4net.LogManager.GetLogger(typeof(TaskController));
         TaskManager taskManager = new TaskManager();
         [HttpPost]

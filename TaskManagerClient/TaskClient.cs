@@ -13,7 +13,7 @@ namespace TaskManagerClient
 {
     public class TaskClient
     {
-        private static readonly string urlParameters;
+         static readonly string urlParameters;
         public static string URL = ConfigurationManager.AppSettings["URL"].ToString();
         //log4net.Config.BasicConfigurator.Configure();
         log4net.ILog log = log4net.LogManager.GetLogger(typeof(TaskClient));
@@ -34,7 +34,7 @@ namespace TaskManagerClient
                 return " ";
             }
         }
-        public void Edit(Task task)
+        public string Edit(Task task)
         {
             try
             {
@@ -43,11 +43,12 @@ namespace TaskManagerClient
                 var content = new StringContent(JsonConvert.SerializeObject(task), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync(URL + "Edit", content).Result;// new Uri(URL + "UpdateFile", content);
                 string resp = Convert.ToString(response);
-                //return resp;
+                return resp;
             }
             catch (Exception ex)
             {
                 log.Error("Error in Edit task details TaskClient" + ex);
+                return null;
             }
         }
         public List<Task> GetAll()
@@ -68,7 +69,6 @@ namespace TaskManagerClient
                 return null;
             }
         }
-
         public Task Get(int id)
         {
             try
@@ -101,8 +101,9 @@ namespace TaskManagerClient
             catch (Exception ex)
             {
                 log.Error("Error in deleting task details of TaskClient" + ex);
+                return 1;
             }
-            return 1;
+           
         }
     }
 }

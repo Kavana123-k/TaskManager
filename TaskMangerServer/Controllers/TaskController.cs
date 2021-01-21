@@ -8,64 +8,86 @@ using System.Configuration;
 using log4net.Config;
 using System.Globalization;
 using System.Web.Http.Cors;
+using System.Net.Http;
+using System.Net;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace TaskMangerServer.Controllers
 {
-   [EnableCors(origins: "http://localhost", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Route("api/[controller]")]
     public class TaskController : ApiController
-    {        
+    {
         log4net.ILog log = log4net.LogManager.GetLogger(typeof(TaskController));
-        TaskManager taskManager = new TaskManager();
+        //TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = TaskManager.GetInstance();
         [HttpPost]
-        public void Create([FromBody] Task task)
+        public HttpResponseMessage create([FromBody] Task task)
         {
             try
             {
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, "value");             
                 log.Debug("HttpPost to Create() task details");
                 //var cTime = DateTime.ParseExact(createdTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 //var eTime = DateTime.ParseExact(endTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
-                taskManager.Create(task);
+                var t = taskManager.Create(task);
                 Console.WriteLine("created");
+                response.Content = new StringContent(JsonConvert.SerializeObject(t), Encoding.Unicode);
+               // response.Headers.CacheControl = new CacheControlHeaderValue() { MaxAge = TimeSpan.FromMinutes(20) };
+                return response;
             }
             catch (Exception)
             {
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.InternalServerError, "value");
                 log.Error("Exception in Create task");
+                return response;
             }
         }
+        [Route("Edit")]
         [HttpPost]
-        public Task Edit([FromBody] Task task)
+        public HttpResponseMessage Edit([FromBody] Task task)
         {
             try
             {
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
                 log.Debug("HttpPost to Edit() task details");
                 var t = taskManager.Edit(task);
-                return t;
+                response.Content = new StringContent(JsonConvert.SerializeObject(t), Encoding.Unicode);
+                return response;
             }
             catch (Exception)
             {
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.NotModified, "value");
                 log.Error("Exception in Edit task");
-                return null;
+                return response;
             }
         }
-        [HttpPost]
-        public int Delete([FromBody] int id)
+
+        [Route("delete")]
+        [HttpDelete]
+        public HttpResponseMessage Delete([FromUri] string id)
         {
             try
             {
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
                 log.Debug("HttpPost to Delete() task details");
-                var t = taskManager.Delete(id);
-                return t;
+                var t = taskManager.Delete(int.Parse(id));
+                response.Content = new StringContent(JsonConvert.SerializeObject(t), Encoding.Unicode);
+                return response;
             }
             catch (Exception)
             {
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.NotModified, "value");
                 log.Error("Exception in Delete task");
-                return ' ';
+                return response;
             }
         }
         [HttpGet]
         public List<Task> GetAll()
         {
             try
+
             {
                 log.Debug("HttpGet to Display() task details");
                 var t = taskManager.GetAll();

@@ -8,6 +8,7 @@ using System.Web.Http.SelfHost;
 using System.Configuration;
 using System.Web.Http.Routing;
 using Newtonsoft.Json.Serialization;
+using System.Data.SQLite;
 
 namespace TaskMangerServer
 {

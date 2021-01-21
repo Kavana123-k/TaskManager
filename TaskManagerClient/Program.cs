@@ -26,7 +26,6 @@ namespace TaskManagerClient
                 switch (choice)
                 {
                     case 1:
-
                         taskclient.Create(GetTaskData());
                         break;
                     case 2:
@@ -50,7 +49,6 @@ namespace TaskManagerClient
                 }
             }
         }
-
         public static Task GetTaskData()
         {
             Console.WriteLine("enter id:");
@@ -81,7 +79,6 @@ namespace TaskManagerClient
                 endTime = endTime.ToString("dd/MM/yyyy HH:mm:ss")
             };
         }
-
         public static DateTime GetDatetime()
         {
             DateTime dateTime = new DateTime();
@@ -91,7 +88,6 @@ namespace TaskManagerClient
             }
             return dateTime;
         }
-
         public static int GetId()
         {
             int id;
